@@ -1,324 +1,619 @@
 {% extends "/main/layout.html" %}
 
 {% block content %}
-<div class="container-fluid">
+<!-- Reset completo de estilos del layout -->
+<style>
+    /* Ocultar el sidebar completamente */
+    #accordionSidebar, .sidebar {
+        display: none !important;
+    }
+    
+    /* Anular estilos del SB Admin */
+    #content-wrapper, #content {
+        background: #f7fbf7 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+    
+    #wrapper {
+        background: #f7fbf7;
+    }
+    
+    /* Hacer que el content-wrapper ocupe todo el ancho */
+    #wrapper #content-wrapper {
+        margin-left: 0 !important;
+    }
+    
+    .container-fluid {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
 
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-    </div>
+    /* Ocultar elementos del layout que no queremos */
+    .topbar, nav.navbar {
+        display: none !important;
+    }
 
-    <!-- Content Row -->
-    <div class="row">
+    /* Reset general */
+    body {
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
 
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    /* Estilos del nuevo dashboard */
+    :root{
+      --accent:#2b9348;
+      --muted:#6b7280;
+      --bg:#f7fbf7;
+      --card:#ffffff;
+    }
+    
+    .dashboard-nuevo * {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial !important;
+    }
+    
+    .dashboard-nuevo {
+        background: var(--bg);
+        min-height: 100vh;
+        color: #0f172a;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .dashboard-header{
+        background:linear-gradient(90deg,var(--accent),#66bb6a);
+        color:white;
+        padding:18px 22px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .dashboard-header h1{
+        margin:0;
+        font-size:1.2rem;
+        font-weight: 700;
+    }
+    
+    .dashboard-header .text-small{
+        font-size:0.9rem;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 400;
+    }
+    
+    .dashboard-container{
+        max-width:1100px;
+        margin:22px auto;
+        padding:0 16px;
+    }
+    
+    .dashboard-grid{
+        display:grid;
+        grid-template-columns:1fr 360px;
+        gap:18px;
+    }
+    
+    .dashboard-card{
+        background:var(--card);
+        border-radius:12px;
+        padding:14px;
+        box-shadow:0 6px 18px rgba(2,6,23,0.06);
+    }
+    
+    #map{
+        height:420px;
+        border-radius:10px;
+        overflow:hidden;
+    }
+    
+    .text-small{
+        font-size:0.9rem;
+        color:var(--muted);
+    }
+    
+    .dashboard-btn{
+        display:inline-block;
+        padding:8px 12px;
+        border-radius:10px;
+        background:var(--accent);
+        color:white !important;
+        text-decoration:none;
+        cursor:pointer;
+        border:none;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-btn:hover {
+        background: #237a3b;
+        color: white !important;
+    }
+    
+    .text-muted{
+        color:var(--muted);
+    }
+    
+    .dashboard-label{
+        display:block;
+        margin-top:8px;
+        font-size:0.85rem;
+        color: #0f172a;
+    }
+    
+    .dashboard-input, .dashboard-select, .dashboard-textarea{
+        width:100%;
+        padding:8px;
+        border-radius:8px;
+        border:1px solid #e6eef0;
+        margin-top:6px;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-achievement{
+        padding:8px;
+        border-radius:8px;
+        background:linear-gradient(90deg,#eef7ee,#f7fff7);
+        margin-bottom:8px;
+    }
+    
+    .dashboard-stat-number{
+        font-size:1.6rem;
+        font-weight:700;
+        color: #0f172a;
+    }
+    
+    .dashboard-mini-list{
+        max-height:220px;
+        overflow:auto;
+        padding-right:8px;
+    }
+    
+    .dashboard-educ-item{
+        margin-bottom:10px;
+    }
+    
+    .dashboard-badge{
+        display:inline-block;
+        padding:6px 8px;
+        border-radius:999px;
+        background:#eef6f1;
+        font-weight:600;
+        margin-right:6px;
+        font-size: 0.85rem;
+    }
+    
+    .dashboard-nav a{
+        color:white;
+        text-decoration:none;
+        margin-left:12px;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-nav a:hover{
+        color: #f0f0f0;
+        text-decoration: underline;
+    }
+    
+    @media (max-width:980px){
+      .dashboard-grid{grid-template-columns:1fr; }
+      .dashboard-header{flex-direction:column;align-items:flex-start;gap:10px}
+    }
+</style>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+e2m0p0b8g1j6v+gqXb8bKk3y0p2v9m+3f2F0z0+M=" crossorigin=""/>
+
+<div class="dashboard-nuevo">
+    <header class="dashboard-header">
+        <div>
+            <h1>Recolección Inteligente — <span style="opacity:0.9">Suavena Y Supitillo</span></h1>
+            <div class="text-small">Conecta ciudadanos, recicladores y empresas • Gamificación • Estadísticas • Educación</div>
         </div>
+        <nav class="dashboard-nav">
+            <a href="#map-section">Mapa</a>
+            <a href="#gamification">Gamificación</a>
+            <a href="#conectar">Conectar</a>
+            <a href="#estadisticas">Estadísticas</a>
+            <a href="#educacion">Educación</a>
+        </nav>
+    </header>
 
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Earnings (Annual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+    <main class="dashboard-container">
+        <section class="dashboard-grid" id="map-section">
+            <div class="dashboard-card">
+                <h3>Mapa de puntos de reciclaje y rutas</h3>
+                <p class="text-small">Localiza puntos cercanos, obtén una ruta rápida y registra entregas.</p>
+                <div id="map"></div>
+
+                <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+                    <button class="dashboard-btn" id="btn-locate">Usar mi ubicación</button>
+                    <button class="dashboard-btn" id="btn-refresh" style="background:#257a3b">Refrescar puntos</button>
+                    <div style="margin-left:auto">
+                        <span class="text-small">Puntos: <strong id="points-display">0</strong></span>
+                    </div>
+                </div>
+
+                <div style="margin-top:12px" id="nearest-info" class="text-small text-muted"></div>
+            </div>
+
+            <aside class="dashboard-card">
+                <h4>Mi perfil de gamificación</h4>
+                <div>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div>
+                            <div class="dashboard-stat-number" id="gamification-points">0</div>
+                            <div class="text-small">Puntos acumulados</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        <div style="text-align:right">
+                            <div class="text-small text-muted">Nivel</div>
+                            <div style="font-weight:700" id="gamification-level">Novato</div>
                         </div>
                     </div>
+
+                    <hr style="margin:10px 0"/>
+
+                    <h5>Logros</h5>
+                    <div id="achievements" class="dashboard-mini-list"></div>
+
+                    <hr style="margin:10px 0"/>
+
+                    <h5>Recompensas</h5>
+                    <div id="rewards">
+                        <div style="display:flex;gap:8px;flex-direction:column">
+                            <button class="dashboard-btn" id="reward-voucher">Canjear 100 pts → Cupón de descuento</button>
+                            <button class="dashboard-btn" id="reward-seed" style="background:#1b7a3f">Canjear 250 pts → 1 planta</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section style="margin-top:18px" class="dashboard-card" id="conectar">
+            <h3>Conectar ciudadanos, recicladores y empresas</h3>
+            <p class="text-small">Regístrate según tu rol para que otros te contacten o para ofrecer servicios de recolección.</p>
+
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">
+                <div style="flex:1;min-width:260px">
+                    <h4>Registro</h4>
+                    <label class="dashboard-label">Tipo</label>
+                    <select id="role" class="dashboard-select">
+                        <option value="ciudadano">Ciudadano</option>
+                        <option value="reciclador">Reciclador</option>
+                        <option value="empresa">Empresa</option>
+                    </select>
+                    <label class="dashboard-label">Nombre</label>
+                    <input id="name" class="dashboard-input" placeholder="Tu nombre o nombre de la organización" />
+                    <label class="dashboard-label">Contacto (tel o email)</label>
+                    <input id="contact" class="dashboard-input" placeholder="ej: 3011234567 / mail@ej.com" />
+                    <label class="dashboard-label">Descripción / Servicios</label>
+                    <textarea id="desc" rows="3" class="dashboard-textarea" placeholder="Qué ofreces o qué necesitas"></textarea>
+                    <button class="dashboard-btn" id="btn-register" style="margin-top:8px">Registrar</button>
+                </div>
+
+                <div style="flex:1;min-width:260px">
+                    <h4>Directorio</h4>
+                    <div id="directory" class="dashboard-mini-list text-small text-muted"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+        <section style="margin-top:18px" class="dashboard-card" id="estadisticas">
+            <h3>Estadísticas personalizadas — Medir impacto</h3>
+            <p class="text-small">Gráfica estimada de residuos recogidos y CO₂ evitado. Los datos se generan según tu actividad y puntos.</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+                <div class="dashboard-card" style="padding:10px">
+                    <h4>Residuos recogidos (kg)</h4>
+                    <canvas id="chart-waste" style="max-height:240px"></canvas>
                 </div>
-            </div>
-        </div>
-
-        <!-- Pending Requests Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content Row -->
-
-    <div class="row">
-
-        <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content Row -->
-    <div class="row">
-
-        <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
-
-            <!-- Project Card Example -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                </div>
-                <div class="card-body">
-                    <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                <div class="dashboard-card" style="padding:10px">
+                    <h4>CO₂ evitado (kg)</h4>
+                    <canvas id="chart-co2" style="max-height:240px"></canvas>
                 </div>
             </div>
 
-            <!-- Color System -->
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-primary text-white shadow">
-                        <div class="card-body">
-                            Primary
-                            <div class="text-white-50 small">#4e73df</div>
-                        </div>
+            <div style="margin-top:10px">
+                <button class="dashboard-btn" id="btn-simulate">Simular entrega +10 pts</button>
+                <span class="text-small text-muted" style="margin-left:10px">Cada punto representa ~0.2 kg de residuos recogidos.</span>
+            </div>
+        </section>
+
+        <section style="margin-top:18px" class="dashboard-card" id="educacion">
+            <h3>Espacio educativo — Reciclaje y sostenibilidad</h3>
+            <p class="text-small">Guías rápidas, preguntas frecuentes y recursos.</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+                <div>
+                    <div class="dashboard-educ-item">
+                        <div class="dashboard-badge">Guía</div>
+                        <h4>Cómo separar en casa</h4>
+                        <p class="text-small">Divide en orgánico, reciclable (papel, cartón, plástico duro), y residuos no reciclables. Lava envases y aplana cajas.</p>
+                    </div>
+
+                    <div class="dashboard-educ-item">
+                        <div class="dashboard-badge">Tip</div>
+                        <h4>Reduce antes de reciclar</h4>
+                        <p class="text-small">Prioriza reducir consumo y reutilizar productos. El reciclaje es la última barrera.</p>
+                    </div>
+
+                    <div class="dashboard-educ-item">
+                        <div class="dashboard-badge">FAQ</div>
+                        <h4>¿Qué pasa si mezclo materiales?</h4>
+                        <p class="text-small">Mezclar puede contaminar lotes enteros. Separa lo más posible.</p>
                     </div>
                 </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-success text-white shadow">
-                        <div class="card-body">
-                            Success
-                            <div class="text-white-50 small">#1cc88a</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-info text-white shadow">
-                        <div class="card-body">
-                            Info
-                            <div class="text-white-50 small">#36b9cc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-warning text-white shadow">
-                        <div class="card-body">
-                            Warning
-                            <div class="text-white-50 small">#f6c23e</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-danger text-white shadow">
-                        <div class="card-body">
-                            Danger
-                            <div class="text-white-50 small">#e74a3b</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-secondary text-white shadow">
-                        <div class="card-body">
-                            Secondary
-                            <div class="text-white-50 small">#858796</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-light text-black shadow">
-                        <div class="card-body">
-                            Light
-                            <div class="text-black-50 small">#f8f9fc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white shadow">
-                        <div class="card-body">
-                            Dark
-                            <div class="text-white-50 small">#5a5c69</div>
-                        </div>
-                    </div>
+
+                <div>
+                    <h4>Recursos</h4>
+                    <ul class="text-small text-muted">
+                        <li>Centros de reciclaje locales</li>
+                        <li>Programas de compostaje comunitario</li>
+                        <li>Iniciativas de recompra de plástico</li>
+                    </ul>
+
+                    <hr/>
+                    <h4>Material descargable</h4>
+                    <p class="text-small">Puedes descargar una checklist de separación (simulada).</p>
+                    <button class="dashboard-btn" id="download-checklist">Descargar checklist</button>
                 </div>
             </div>
-
-        </div>
-
-        <div class="col-lg-6 mb-4">
-
-            <!-- Illustrations -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="{{url_for('static', filename='img/undraw_posting_photo.svg')}}" alt="...">
-                    </div>
-                    <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow"
-                            href="https://undraw.co/">unDraw</a>, a
-                        constantly updated collection of beautiful svg images that you can use
-                        completely free and without attribution!</p>
-                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                        unDraw &rarr;</a>
-                </div>
-            </div>
-
-            <!-- Approach -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                        custom components and custom utility classes.</p>
-                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                        Bootstrap framework, especially the utility classes.</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
+        </section>
+    </main>
 </div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-o9N1j7x7GkGz3Z1kP3xQzYbGm2Q9p6p2f5b1p8y3L2o=" crossorigin=""></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    const samplePoints = [
+      {id:1, name:"Punto Verde Central", lat:-0.915, lng:-78.615, types:["plástico","papel"], open:"8:00-17:00"},
+      {id:2, name:"Punto Recicla Norte", lat:-0.912, lng:-78.607, types:["vidrio","metal"], open:"9:00-16:00"},
+      {id:3, name:"Punto Comunitario La Plaza", lat:-0.919, lng:-78.620, types:["orgánico","papel"], open:"7:00-19:00"},
+    ];
+
+    const STORAGE_KEY = "recoleccion_gamification_v1";
+    const defaultState = {points:0, deliveries:0, achievements:[], profile:null, directory:[]};
+
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) {
+        try { return JSON.parse(raw); } catch(e){}
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultState));
+      return {...defaultState};
+    }
+    function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+    let state = loadState();
+
+    const map = L.map('map', {zoomControl:true}).setView([ -0.915, -78.615 ], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+
+    function renderPoints(points){
+      markersLayer.clearLayers();
+      points.forEach(p=>{
+        const m = L.marker([p.lat,p.lng]).addTo(markersLayer);
+        const popup = `<strong>${p.name}</strong><br/>Tipos: ${p.types.join(", ")}<br/>Horario: ${p.open}<br/>
+        <button onclick="startRoute(${p.lat}, ${p.lng}, ${p.id})" class="dashboard-btn" style="margin-top:6px">Ir a este punto</button>
+        <button onclick="registerDelivery(${p.id})" class="dashboard-btn" style="margin-top:6px;background:#1a6b31">Registrar entrega</button>`;
+        m.bindPopup(popup);
+      });
+    }
+
+    renderPoints(samplePoints);
+
+    let userMarker = null;
+    function locateUser(){
+      if(!navigator.geolocation){
+        alert("Geolocalización no disponible en este navegador.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(pos=>{
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        if(userMarker) map.removeLayer(userMarker);
+        userMarker = L.marker([lat,lng]).addTo(map).bindPopup("Tu ubicación").openPopup();
+        map.setView([lat,lng],15);
+
+        let nearest = null; let nd = Infinity;
+        samplePoints.forEach(p=>{
+          const d = distance(lat,lng,p.lat,p.lng);
+          if(d<nd){ nd=d; nearest=p; }
+        });
+        const km = (nd).toFixed(2);
+        document.getElementById("nearest-info").innerText = nearest ? `Punto más cercano: ${nearest.name} — ${km} km` : "";
+      }, err=>{
+        alert("No se pudo obtener tu ubicación. Asegúrate de permitir el acceso.");
+      });
+    }
+
+    document.getElementById("btn-locate").addEventListener("click", ()=> locateUser());
+    document.getElementById("btn-refresh").addEventListener("click", ()=> { renderPoints(samplePoints); alert("Puntos actualizados (demo)."); });
+
+    function distance(lat1,lon1,lat2,lon2){
+      function toRad(v){return v*Math.PI/180;}
+      const R = 6371;
+      const dLat = toRad(lat2-lat1);
+      const dLon = toRad(lon2-lon1);
+      const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)*Math.sin(dLon/2);
+      const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R*c;
+    }
+
+    let routeLayer = null;
+    window.startRoute = function(lat,lng,id){
+      if(!userMarker){
+        alert("Activa tu ubicación primero con 'Usar mi ubicación'.");
+        return;
+      }
+      const userLatLng = userMarker.getLatLng();
+      if(routeLayer) map.removeLayer(routeLayer);
+      routeLayer = L.polyline([[userLatLng.lat,userLatLng.lng],[lat,lng]], {color:'#2b9348',weight:5,opacity:0.9}).addTo(map);
+      map.fitBounds(routeLayer.getBounds(), {padding:[40,40]});
+    }
+
+    function updateGamificationUI(){
+      document.getElementById("gamification-points").innerText = state.points;
+      document.getElementById("gamification-level").innerText = computeLevel(state.points);
+      const achDiv = document.getElementById("achievements");
+      achDiv.innerHTML = "";
+      const known = state.achievements || [];
+      const allPossible = [
+        {id:"first", title:"Primera entrega", desc:"Registraste tu primera entrega", condition: s=> s.deliveries>=1},
+        {id:"five", title:"5 entregas", desc:"Has completado 5 entregas", condition: s=> s.deliveries>=5},
+        {id:"collector", title:"Recolector activo", desc:"Acumulaste 200 pts", condition: s=> s.points>=200}
+      ];
+      allPossible.forEach(a=>{
+        const unlocked = known.includes(a.id) || a.condition(state);
+        if(a.condition(state) && !known.includes(a.id)){
+          state.achievements.push(a.id);
+          saveState(state);
+        }
+        const el = document.createElement("div");
+        el.className = "dashboard-achievement";
+        el.innerHTML = `<strong>${a.title}</strong><div class="text-small text-muted">${a.desc}</div>${unlocked?'<div style="margin-top:6px;color:green;font-weight:700">Desbloqueado</div>':''}`;
+        achDiv.appendChild(el);
+      });
+    }
+
+    function computeLevel(points){
+      if(points>=500) return "Maestro";
+      if(points>=200) return "Avanzado";
+      if(points>=80) return "Intermedio";
+      if(points>=30) return "Iniciado";
+      return "Novato";
+    }
+
+    function registerDelivery(pointId){
+      state.deliveries = (state.deliveries || 0) + 1;
+      const gained = 10;
+      state.points = (state.points || 0) + gained;
+      saveState(state);
+      updateGamificationUI();
+      alert(`Entrega registrada. Ganaste ${gained} pts.`);
+      updateCharts();
+    }
+
+    window.registerDelivery = registerDelivery;
+
+    document.getElementById("btn-simulate").addEventListener("click", ()=>{
+      registerDelivery(null);
+    });
+
+    document.getElementById("reward-voucher").addEventListener("click", ()=>{
+      if(state.points>=100){
+        state.points -= 100;
+        saveState(state);
+        updateGamificationUI();
+        alert("Cupón generado: CUPON-DEMO-100 (simulado).");
+      } else alert("No tienes suficientes puntos.");
+    });
+    
+    document.getElementById("reward-seed").addEventListener("click", ()=>{
+      if(state.points>=250){
+        state.points -= 250;
+        saveState(state);
+        updateGamificationUI();
+        alert("Has canjeado una planta! Proveedor local será contactado (simulado).");
+      } else alert("No tienes suficientes puntos.");
+    });
+
+    document.getElementById("btn-register").addEventListener("click", ()=>{
+      const role = document.getElementById("role").value;
+      const name = document.getElementById("name").value.trim();
+      const contact = document.getElementById("contact").value.trim();
+      const desc = document.getElementById("desc").value.trim();
+      if(!name || !contact){ alert("Por favor completa nombre y contacto."); return; }
+      const entry = {id:Date.now(), role, name, contact, desc};
+      state.directory = state.directory || [];
+      state.directory.push(entry);
+      saveState(state);
+      renderDirectory();
+      alert("Registro guardado (demo).");
+      document.getElementById("name").value="";document.getElementById("contact").value="";document.getElementById("desc").value="";
+    });
+
+    function renderDirectory(){
+      const container = document.getElementById("directory");
+      container.innerHTML = "";
+      (state.directory||[]).slice().reverse().forEach(d=>{
+        const el = document.createElement("div");
+        el.style.padding="8px";
+        el.style.borderBottom="1px solid #f0f3f2";
+        el.innerHTML = `<strong>${d.name}</strong> <span class="text-small text-muted">(${d.role})</span><br/><div class="text-small text-muted">${d.contact}</div><div class="text-small">${d.desc}</div>`;
+        container.appendChild(el);
+      });
+    }
+
+    const ctxWaste = document.getElementById("chart-waste");
+    const ctxCo2 = document.getElementById("chart-co2");
+    const months = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago"];
+    
+    let chartWaste = new Chart(ctxWaste, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{ label: 'Kg recogidos', data: generateWasteData(), backgroundColor: '#2b9348' }]
+      },
+      options:{responsive:true,scales:{y:{beginAtZero:true}}}
+    });
+    
+    let chartCo2 = new Chart(ctxCo2, {
+      type: 'line',
+      data: { labels: months, datasets:[{label:"Kg CO2 evitado", data: generateCO2Data(), tension:0.4, fill:true, borderColor: '#66bb6a', backgroundColor: 'rgba(43, 147, 72, 0.1)'}] },
+      options:{responsive:true,scales:{y:{beginAtZero:true}}}
+    });
+
+    function generateWasteData(){
+      const base = [20,26,18,30,22,28,24,32];
+      const pts = state.points || 0;
+      const add = Math.floor(pts/10);
+      return base.map((v,i)=> Math.max(0, v + Math.round(add*Math.random())));
+    }
+    
+    function generateCO2Data(){
+      const waste = generateWasteData();
+      return waste.map(w => +(w * 0.3).toFixed(1));
+    }
+
+    function updateCharts(){
+      chartWaste.data.datasets[0].data = generateWasteData();
+      chartWaste.update();
+      chartCo2.data.datasets[0].data = generateCO2Data();
+      chartCo2.update();
+      document.getElementById("points-display").innerText = state.points || 0;
+    }
+
+    document.getElementById("download-checklist").addEventListener("click", ()=>{
+      const text = `Checklist de separación:\n\n- Orgánico: restos de comida, residuos de jardín.\n- Reciclable: papel, cartón, plástico (limpio), vidrio, metal.\n- No reciclable: pañales, papeles sucios, cerámicas.\n\nInstrucciones: lavar envases, aplastar cajas, separar por colores si aplica.`;
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "checklist_separacion.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    updateGamificationUI();
+    renderDirectory();
+    updateCharts();
+
+    console.log("Dashboard de recolección cargado. Estado:", state);
+</script>
+
 {% endblock %}

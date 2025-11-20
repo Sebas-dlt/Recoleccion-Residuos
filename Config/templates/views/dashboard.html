@@ -2,209 +2,9 @@
 
 {% block content %}
 <!-- Reset completo de estilos del layout -->
-<style>
-    /* Ocultar el sidebar completamente */
-    #accordionSidebar, .sidebar {
-        display: none !important;
-    }
-    
-    /* Anular estilos del SB Admin */
-    #content-wrapper, #content {
-        background: #f7fbf7 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-    }
-    
-    #wrapper {
-        background: #f7fbf7;
-    }
-    
-    /* Hacer que el content-wrapper ocupe todo el ancho */
-    #wrapper #content-wrapper {
-        margin-left: 0 !important;
-    }
-    
-    .container-fluid {
-        padding: 0 !important;
-        max-width: 100% !important;
-    }
-
-    /* Ocultar elementos del layout que no queremos */
-    .topbar, nav.navbar {
-        display: none !important;
-    }
-
-    /* Reset general */
-    body {
-        overflow-x: hidden;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* Estilos del nuevo dashboard */
-    :root{
-      --accent:#2b9348;
-      --muted:#6b7280;
-      --bg:#f7fbf7;
-      --card:#ffffff;
-    }
-    
-    .dashboard-nuevo * {
-        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial !important;
-    }
-    
-    .dashboard-nuevo {
-        background: var(--bg);
-        min-height: 100vh;
-        color: #0f172a;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .dashboard-header{
-        background:linear-gradient(90deg,var(--accent),#66bb6a);
-        color:white;
-        padding:18px 22px;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:16px;
-        margin: 0;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .dashboard-header h1{
-        margin:0;
-        font-size:1.2rem;
-        font-weight: 700;
-    }
-    
-    .dashboard-header .text-small{
-        font-size:0.9rem;
-        color: rgba(255, 255, 255, 0.95);
-        font-weight: 400;
-    }
-    
-    .dashboard-container{
-        max-width:1100px;
-        margin:22px auto;
-        padding:0 16px;
-    }
-    
-    .dashboard-grid{
-        display:grid;
-        grid-template-columns:1fr 360px;
-        gap:18px;
-    }
-    
-    .dashboard-card{
-        background:var(--card);
-        border-radius:12px;
-        padding:14px;
-        box-shadow:0 6px 18px rgba(2,6,23,0.06);
-    }
-    
-    #map{
-        height:420px;
-        border-radius:10px;
-        overflow:hidden;
-    }
-    
-    .text-small{
-        font-size:0.9rem;
-        color:var(--muted);
-    }
-    
-    .dashboard-btn{
-        display:inline-block;
-        padding:8px 12px;
-        border-radius:10px;
-        background:var(--accent);
-        color:white !important;
-        text-decoration:none;
-        cursor:pointer;
-        border:none;
-        font-size: 0.9rem;
-    }
-    
-    .dashboard-btn:hover {
-        background: #237a3b;
-        color: white !important;
-    }
-    
-    .text-muted{
-        color:var(--muted);
-    }
-    
-    .dashboard-label{
-        display:block;
-        margin-top:8px;
-        font-size:0.85rem;
-        color: #0f172a;
-    }
-    
-    .dashboard-input, .dashboard-select, .dashboard-textarea{
-        width:100%;
-        padding:8px;
-        border-radius:8px;
-        border:1px solid #e6eef0;
-        margin-top:6px;
-        font-size: 0.9rem;
-    }
-    
-    .dashboard-achievement{
-        padding:8px;
-        border-radius:8px;
-        background:linear-gradient(90deg,#eef7ee,#f7fff7);
-        margin-bottom:8px;
-    }
-    
-    .dashboard-stat-number{
-        font-size:1.6rem;
-        font-weight:700;
-        color: #0f172a;
-    }
-    
-    .dashboard-mini-list{
-        max-height:220px;
-        overflow:auto;
-        padding-right:8px;
-    }
-    
-    .dashboard-educ-item{
-        margin-bottom:10px;
-    }
-    
-    .dashboard-badge{
-        display:inline-block;
-        padding:6px 8px;
-        border-radius:999px;
-        background:#eef6f1;
-        font-weight:600;
-        margin-right:6px;
-        font-size: 0.85rem;
-    }
-    
-    .dashboard-nav a{
-        color:white;
-        text-decoration:none;
-        margin-left:12px;
-        font-size: 0.9rem;
-    }
-    
-    .dashboard-nav a:hover{
-        color: #f0f0f0;
-        text-decoration: underline;
-    }
-    
-    @media (max-width:980px){
-      .dashboard-grid{grid-template-columns:1fr; }
-      .dashboard-header{flex-direction:column;align-items:flex-start;gap:10px}
-    }
-</style>
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -222,6 +22,7 @@
             <a href="#conectar">Conectar</a>
             <a href="#estadisticas">Estadísticas</a>
             <a href="#educacion">Educación</a>
+            <a href="/logout" style="background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 6px; margin-left: 20px;">Cerrar Sesión</a>
         </nav>
     </header>
 
@@ -615,5 +416,7 @@
 
     console.log("Dashboard de recolección cargado. Estado:", state);
 </script>
+
+  <script src="{{ url_for('static', filename='js/dashboard-backend.js') }}"></script>
 
 {% endblock %}

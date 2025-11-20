@@ -1,0 +1,37 @@
+/* Styles for Pickups menu item and pickups components */
+.nav-pickups .nav-link {
+    color: #e9f8ee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav-pickups .nav-link .fa-truck {
+    color: #ffffff;
+    font-size: 1.05rem;
+}
+.nav-pickups .badge-pickups {
+    background: #ffffff22;
+    color: #fff;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    margin-left: auto;
+}
+/* Active state */
+.nav-pickups.active > .nav-link,
+.nav-pickups .nav-link.active {
+    background: linear-gradient(90deg,#1f7a2f,#2b9348);
+    border-radius: 6px;
+    color: #fff !important;
+}
+.nav-pickups .nav-link:hover{
+    background: rgba(43,147,72,0.12);
+    border-radius: 6px;
+}
+
+/* Pickups partial styles */
+#pickups { margin-top: 20px; }
+#pickups .card { border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+#pickups #pickupsLoader { margin-bottom: 10px; color: #6b7280; }
+#pickupsEmpty { margin-top: 10px; color: #6b7280; }
+#pickupsTable td, #pickupsTable th { vertical-align: middle; }

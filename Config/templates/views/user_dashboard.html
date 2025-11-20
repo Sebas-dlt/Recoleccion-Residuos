@@ -1,0 +1,126 @@
+{% extends "/main/layout.html" %}
+
+{% block content %}
+<!-- Reset completo de estilos del layout -->
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+<div class="dashboard-nuevo">
+    <header class="dashboard-header">
+        <div>
+            <h1>Panel de Usuario — <span style="opacity:0.9">Recolección Residuos</span></h1>
+            <div class="text-small">Mi perfil • Recolecciones • Gamificación • Soporte</div>
+        </div>
+        <nav class="dashboard-nav">
+            <a href="#estadisticas">Estadísticas</a>
+            <a href="#gamification">Gamificación</a>
+            <a href="#entregas">Entregas</a>
+            <a href="#perfil">Perfil</a>
+            <a href="/logout"
+                style="background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 6px; margin-left: 20px;">Cerrar
+                Sesión</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Estadísticas del Usuario -->
+        <section id="estadisticas">
+            <h3>Mis Estadísticas</h3>
+            <div
+                style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:14px;margin-top:12px">
+                <div class="dashboard-card">
+                    <div class="text-small text-muted">Mis Recolecciones</div>
+                    <div class="dashboard-stat-number" id="ud-pickups-count">-</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="text-small text-muted">Puntos Totales</div>
+                    <div class="dashboard-stat-number" id="ud-total-points">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="text-small text-muted">Entregas Realizadas</div>
+                    <div class="dashboard-stat-number" id="ud-deliveries-count">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="text-small text-muted">Logros Desbloqueados</div>
+                    <div class="dashboard-stat-number" id="ud-achievements-count">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Perfil y recolecciones -->
+        <section class="dashboard-grid" style="margin-top:22px">
+            <div class="dashboard-card" id="perfil">
+                <h4>Mi Perfil</h4>
+                <div style="margin-top:12px">
+                    <div class="text-small text-muted">Email</div>
+                    <div style="font-weight:600;margin-top:4px" id="ud-email">(no autenticado)</div>
+                </div>
+                <div style="margin-top:12px">
+                    <div class="text-small text-muted">Rol</div>
+                    <div style="font-weight:600;margin-top:4px" id="ud-role">-</div>
+                </div>
+                <hr style="margin:14px 0" />
+                <p class="text-small text-muted">Puedes cerrar sesión y volver a iniciar para cambiar de cuenta.</p>
+            </div>
+
+            <aside class="dashboard-card" id="gamification">
+                <h4>Gamificación y Logros</h4>
+                <div style="margin-top:12px">
+                    <h6 class="text-small text-muted">Tus Logros Desbloqueados</h6>
+                    <div id="ud-achievements-list" class="dashboard-mini-list" style="margin-top:8px">
+                        <span class="text-small text-muted">Cargando...</span>
+                    </div>
+                </div>
+                <p class="text-small text-muted" style="margin-top:12px">Sigue reciclando para desbloquear más logros y
+                    ganar puntos.</p>
+            </aside>
+        </section>
+
+        <!-- Historial de Entregas -->
+        <section class="dashboard-card" style="margin-top:18px" id="entregas">
+            <h3>Historial de Entregas</h3>
+            <div style="margin-top:12px;overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse">
+                    <thead>
+                        <tr style="text-align:left;border-bottom:2px solid #e6eef0">
+                            <th style="padding:8px;font-size:0.9rem">ID</th>
+                            <th style="padding:8px;font-size:0.9rem">Punto de Recolección</th>
+                            <th style="padding:8px;font-size:0.9rem">Puntos Ganados</th>
+                            <th style="padding:8px;font-size:0.9rem">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ud-deliveries-table">
+                        <tr>
+                            <td colspan="4" style="padding:12px;text-align:center" class="text-small text-muted">
+                                Cargando entregas...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Contactar Soporte -->
+        <section class="dashboard-card" style="margin-top:18px">
+            <h3>Contactar Soporte</h3>
+            <p class="text-small">Si tienes algún problema o consulta, envíanos un mensaje.</p>
+            <form id="support-form" style="margin-top:12px">
+                <label class="dashboard-label">Nombre (opcional)</label>
+                <input id="support-name" class="dashboard-input" placeholder="Tu nombre" />
+
+                <label class="dashboard-label">Email</label>
+                <input id="support-email" class="dashboard-input" placeholder="tu@correo.com" />
+
+                <label class="dashboard-label">Mensaje</label>
+                <textarea id="support-message" rows="4" class="dashboard-textarea"
+                    placeholder="Describe tu problema o consulta"></textarea>
+
+                <button class="dashboard-btn" type="submit" style="margin-top:12px">Enviar a Soporte</button>
+            </form>
+        </section>
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/user-dashboard.js') }}"></script>
+
+{% endblock %}

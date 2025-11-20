@@ -1,0 +1,26 @@
+/* Styles extracted from driver_dashboard.html */
+#accordionSidebar, .sidebar { display: none !important; }
+#content-wrapper, #content { background: #f7fbf7 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; margin-left: 0 !important; }
+#wrapper { background: #f7fbf7; }
+#wrapper #content-wrapper { margin-left: 0 !important; }
+.container-fluid { padding: 0 !important; max-width: 100% !important; }
+:root { --accent: #2b9348; --muted: #6b7280; --bg: #f7fbf7; --card: #ffffff; --warning: #ffa500; --danger: #dc3545; --success: #2b9348; }
+body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial !important; }
+.driver-header { background: linear-gradient(90deg,var(--accent),#66bb6a); color: white; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; }
+.driver-header h1 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+.driver-nav { display: flex; align-items: center; gap: 16px; }
+.driver-nav a { color: white; text-decoration: none; font-size: 0.9rem; }
+.driver-nav .logout-btn { background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 6px; }
+.driver-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+.driver-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.status-item { background: #f8f9fa; padding: 1rem; border-radius: 8px; display: flex; flex-direction: column; }
+.status-label { font-size: 0.875rem; color: var(--muted); }
+.status-value { font-size: 1.25rem; font-weight: bold; color: var(--accent); margin-top: 0.5rem; }
+.collection-list { margin-top: 1rem; max-height: 300px; overflow-y: auto; }
+.collection-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: white; }
+.collection-info { display: flex; flex-direction: column; gap: 4px; }
+.collection-info span { font-size: 0.875rem; color: var(--muted); }
+.collection-status { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; background: #fff4e5; color: var(--warning); }
+.collection-status.completed { background: #dcffe4; color: var(--success); }
+@media (max-width: 768px) { .driver-header { flex-direction: column; gap: 12px; align-items: flex-start; } .driver-nav { flex-wrap: wrap; } .route-controls { flex-direction: column; } .route-btn { width: 100%; justify-content: center; } }

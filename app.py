@@ -1,40 +1,46 @@
+
 from flask import Flask, request, jsonify, redirect, session, render_template, abort
 from Config.db import app
-import secrets 
+import secrets
+from functools import wraps
+from Config.models import Pickup
 
+# Configuración de la clave secreta para las sesiones
+app.secret_key = 'tu_clave_secreta_aqui'
+
+# Definición de usuarios y roles
+USERS = {
+    "admin@admin.com": {"password": "admin123", "role": "admin"},
+    "user@user.com": {"password": "user123", "role": "user"},
+    "driver@driver.com": {"password": "driver123", "role": "driver"}
+}
+
+# Ruta principal que redirige según el rol
 @app.route("/")
 def index():
-    return "Hola Mundo Web"
+    if 'user_role' not in session:
+        return redirect("/login")
+    return redirect(f"/dashboard/{session['user_role']}")
+
+# Decorador para proteger rutas
+def login_required(allowed_roles=None):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'user_role' not in session:
+                return redirect('/login')
+            if allowed_roles and session['user_role'] not in allowed_roles:
+                abort(403)
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 @app.route("/main")
+@login_required()
 def main():
-    return render_template("views/dashboard.html")
-
-@app.route("/tablas")
-def tablas():
-    empleados = [
-        {"name": "Tiger Nixon", "position": "System Architect", "office": "Edinburgh", "age": 61, "start_date": "2011/04/25", "salary": "$320,800"},
-        {"name": "Garrett Winters", "position": "Accountant", "office": "Tokyo", "age": 63, "start_date": "2011/07/25", "salary": "$170,750"},
-        {"name": "Ashton Cox", "position": "Junior Technical Author", "office": "San Francisco", "age": 66, "start_date": "2009/01/12", "salary": "$86,000"},
-        {"name": "Cedric Kelly", "position": "Senior Javascript Developer", "office": "Edinburgh", "age": 22, "start_date": "2012/03/29", "salary": "$433,060"},
-        {"name": "Airi Satou", "position": "Accountant", "office": "Tokyo", "age": 33, "start_date": "2008/11/28", "salary": "$162,700"},
-        {"name": "Brielle Williamson", "position": "Integration Specialist", "office": "New York", "age": 61, "start_date": "2012/12/02", "salary": "$372,000"},
-        {"name": "Herrod Chandler", "position": "Sales Assistant", "office": "San Francisco", "age": 59, "start_date": "2012/08/06", "salary": "$137,500"}
-    ]
-    return render_template("views/tables.html", empleados=empleados)
-
-@app.route("/cargarTabla")
-def cargarTabla():
-    empleados = [
-        {"name": "Tiger Nixon", "position": "System Architect", "office": "Edinburgh", "age": 61, "start_date": "2011/04/25", "salary": "$320,800"},
-        {"name": "Garrett Winters", "position": "Accountant", "office": "Tokyo", "age": 63, "start_date": "2011/07/25", "salary": "$170,750"},
-        {"name": "Ashton Cox", "position": "Junior Technical Author", "office": "San Francisco", "age": 66, "start_date": "2009/01/12", "salary": "$86,000"},
-        {"name": "Cedric Kelly", "position": "Senior Javascript Developer", "office": "Edinburgh", "age": 22, "start_date": "2012/03/29", "salary": "$433,060"},
-        {"name": "Airi Satou", "position": "Accountant", "office": "Tokyo", "age": 33, "start_date": "2008/11/28", "salary": "$162,700"},
-        {"name": "Brielle Williamson", "position": "Integration Specialist", "office": "New York", "age": 61, "start_date": "2012/12/02", "salary": "$372,000"},
-        {"name": "Herrod Chandler", "position": "Sales Assistant", "office": "San Francisco", "age": 59, "start_date": "2012/08/06", "salary": "$137,500"}
-    ]
-    return empleados
+    if 'user_role' in session:
+        return redirect(f"/dashboard/{session['user_role']}")
+    return redirect("/login")
 
 @app.route("/login")
 def login():
@@ -56,17 +62,66 @@ def submit():
     token = request.headers.get('X-CSRF-Token') or request.form.get('csrf_token')
     if not validar_csrf(token):
         abort(403, description="CSRF Token Invalido")
-    data = request.form.to_dict()
-    if data['exampleInputEmail'] == "aaa@aaa.com" and data['exampleInputPassword'] == "123":
+    
+    email = request.form.get('exampleInputEmail')
+    password = request.form.get('exampleInputPassword')
+    
+    if email in USERS and USERS[email]["password"] == password:
+        session['user_role'] = USERS[email]["role"]
+        session['user_email'] = email
         return jsonify({
             "status": 200,
-            "url":"/tablas"
-        })   
+            "url": f"/dashboard/{USERS[email]['role']}"
+        })
     else:
         return jsonify({
-            "status": 200,
-            "received":data
-        }) 
+            "status": 401,
+            "message": "Credenciales inválidas"
+        })
+
+@app.route("/dashboard/admin")
+@login_required(['admin'])
+def admin_dashboard():
+    return render_template("views/admin_dashboard.html")
+
+@app.route("/dashboard/user")
+@login_required(['user'])
+def user_dashboard():
+    return render_template("views/user_dashboard.html")
+
+@app.route("/dashboard/driver")
+@login_required(['driver'])
+def driver_dashboard():
+    return render_template("views/driver_dashboard.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect('/login')
+
+
+# Página para gestionar pickups (interfaz JS)
+@app.route('/pickups')
+def pickups_page():
+    # Redirect to the appropriate dashboard section depending on user role
+    if 'user_role' not in session:
+        return redirect('/login')
+    role = session.get('user_role')
+    return redirect(f"/dashboard/{role}#pickups")
+
+
+@app.context_processor
+def inject_pickups_count():
+    try:
+        count = Pickup.query.count()
+    except Exception:
+        count = ''
+    return {'pickups_count': count}
 
 if __name__ == "__main__":
+    # Import api to ensure API blueprint is registered
+    try:
+        import api
+    except Exception:
+        pass
     app.run(debug=True, port=5000, host='0.0.0.0')

@@ -1,0 +1,18 @@
+/* Login page styles extracted from login.html */
+#accordionSidebar, .sidebar { display: none !important; }
+#content-wrapper, #content { background: #f7fbf7 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; margin-left: 0 !important; }
+#wrapper { background: #f7fbf7; min-height: 100vh; }
+#wrapper #content-wrapper { margin-left: 0 !important; }
+.container-fluid { padding: 0 !important; max-width: 100% !important; }
+.topbar, nav.navbar { display: none !important; }
+body { overflow-x: hidden; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial !important; }
+:root { --accent: #2b9348; --muted: #6b7280; --bg: #f7fbf7; --card: #ffffff; }
+.login-header { background: linear-gradient(90deg,var(--accent),#66bb6a); color: white; padding: 14px 16px; text-align: center; width: 100%; box-sizing: border-box; }
+.login-container { max-width: 400px; margin: 40px auto; padding: 0 12px; }
+.login-card { background: var(--card); border-radius: 12px; padding: 40px; box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+.form-control-custom { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e6eef0; margin-top: 6px; font-size: 0.95rem; margin-bottom: 16px; }
+.login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease; }
+.login-btn:hover { background: #237a3b; }
+.login-footer { margin-top: 20px; text-align: center; color: var(--muted); font-size: 0.9rem; }
+.login-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+.login-header .subtitle { font-size: 1rem; opacity: 0.9; margin-top: 4px; }

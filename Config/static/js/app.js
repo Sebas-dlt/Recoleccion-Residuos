@@ -1,6 +1,7 @@
 const form = document.getElementById('myform')
 
-form.addEventListener('submit',function(e) {
+if (form) {
+  form.addEventListener('submit',function(e) {
   e.preventDefault();
   const formData = new FormData(form);
   const token = formData.get('csrf_token');
@@ -26,7 +27,8 @@ form.addEventListener('submit',function(e) {
 
 
 
-});
+  });
+}
 
 function saludar() {
   let nombre = document.getElementById("nombre");

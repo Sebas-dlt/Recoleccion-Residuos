@@ -103,6 +103,15 @@
             <span>Tables</span></a>
     </li>
 
+    <!-- Nav Item - Pickups -->
+    <li class="nav-item nav-pickups {% if request.path.startswith('/pickups') or request.path.startswith('/dashboard') and ('pickups' in request.full_path) %}active{% endif %}">
+        <a class="nav-link {% if request.path.startswith('/pickups') or request.path.startswith('/dashboard') and ('pickups' in request.full_path) %}active{% endif %}" href="/pickups">
+            <i class="fas fa-fw fa-truck"></i>
+            <span>Recolecciones</span>
+            <span class="badge-pickups">{{ pickups_count if pickups_count is defined else '' }}</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

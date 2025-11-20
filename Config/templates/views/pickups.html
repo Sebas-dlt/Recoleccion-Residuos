@@ -1,0 +1,38 @@
+{% extends 'main/layout.html' %}
+
+{% block content %}
+<h1>Gestión de Recolecciones</h1>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <form id="createPickupForm">
+      <div class="form-group">
+        <label for="address">Dirección</label>
+        <input id="address" name="address" class="form-control" placeholder="Calle, número, comuna" required />
+      </div>
+      <button class="btn btn-primary mt-2" type="submit">Crear Recolección</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Recolecciones</div>
+  <div class="card-body">
+    <table class="table" id="pickupsTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Dirección</th>
+          <th>Programada</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/pickups.js') }}"></script>
+{% endblock %}
+

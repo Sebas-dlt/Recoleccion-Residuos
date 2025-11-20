@@ -1,0 +1,202 @@
+{% extends "main/layout.html" %}
+
+{% block content %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pickups.css') }}">
+{% endblock %}
+
+<div class="admin-header">
+    <div>
+        <h1>Panel de Administración</h1>
+        <div style="font-size: 0.9rem; opacity: 0.9">Sistema de Gestión de Residuos</div>
+    </div>
+    <nav class="admin-nav">
+        <a href="#resumen">Resumen</a>
+        <a href="#usuarios">Usuarios</a>
+        <a href="#reportes">Reportes</a>
+        <a href="/logout" style="background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 6px;">Cerrar Sesión</a>
+    </nav>
+</div>
+
+<div class="admin-container">
+    <!-- Sección de Estadísticas -->
+    <div id="resumen" class="admin-card">
+        <h2>Resumen del Sistema</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Usuarios</h3>
+                <div class="stat-value">24</div>
+            </div>
+            <div class="stat-card">
+                <h3>Recolecciones Hoy</h3>
+                <div class="stat-value">12</div>
+            </div>
+            <div class="stat-card">
+                <h3>Puntos Activos</h3>
+                <div class="stat-value">8</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Residuos (kg)</h3>
+                <div class="stat-value">1,458</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Gráficos -->
+    <div class="admin-card">
+        <h2>Actividad del Sistema</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="height: 260px; position: relative;">
+                <h3 style="font-size: 1rem; color: #333; margin-bottom: 10px;">Recolecciones por Día</h3>
+                <div style="position: relative; height: 220px;">
+                    <canvas id="recoleccionesChart"></canvas>
+                </div>
+            </div>
+            <div style="height: 260px; position: relative;">
+                <h3 style="font-size: 1rem; color: #333; margin-bottom: 10px;">Tipos de Residuos</h3>
+                <div style="position: relative; height: 220px;">
+                    <canvas id="residuosChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Gestión de Usuarios -->
+    <div class="admin-card" id="usuarios">
+        <h2>Gestión de Usuarios</h2>
+        <div class="admin-actions">
+            <button class="admin-btn" onclick="showAddUserModal()">
+                <i class="fas fa-plus"></i> Agregar Usuario
+            </button>
+            <div class="admin-search">
+                <input type="text" id="userSearch" placeholder="Buscar usuario..." 
+                       onkeyup="filterUsers()" class="admin-input">
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Última Actividad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Sección de Recolecciones (partial) -->
+    {% set pickups_role = 'admin' %}
+    {% include 'views/_pickups_partial.html' %}
+
+    <!-- Modal para Agregar/Editar Usuario -->
+    <div id="userModal" class="admin-modal" style="display: none;">
+        <div class="admin-modal-content">
+            <h3 id="modalTitle">Agregar Usuario</h3>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" class="admin-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="userPassword" class="admin-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="userRole" class="admin-input">
+                        <option value="user">Usuario</option>
+                        <option value="driver">Conductor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="admin-modal-actions">
+                    <button type="submit" class="admin-btn">Guardar</button>
+                    <button type="button" class="admin-btn admin-btn-secondary" 
+                            onclick="closeUserModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sección de Reportes -->
+    <div class="admin-card" id="reportes">
+        <h2>Reportes del Sistema</h2>
+        <div class="reports-grid">
+            <div class="report-card">
+                <div class="report-icon">
+                    <i class="fas fa-recycle"></i>
+                    
+                </div>
+                <h3>Total Recolecciones</h3>
+                <div class="report-value" id="totalRecolecciones">0</div>
+                <div class="report-trend positive">
+                    <i class="fas fa-arrow-up"></i> +15% vs mes anterior
+                </div>
+            </div>
+            <div class="report-card">
+                <div class="report-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Usuarios Activos</h3>
+                <div class="report-value" id="usuariosActivos">0</div>
+                <div class="report-trend positive">
+                    <i class="fas fa-arrow-up"></i> +5% últimos 7 días
+                </div>
+            </div>
+            <div class="report-card">
+                <div class="report-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Rutas Completadas</h3>
+                <div class="report-value" id="rutasCompletadas">0</div>
+                <div class="report-trend positive">
+                    <i class="fas fa-arrow-up"></i> 92% tasa de éxito
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Actividad Reciente -->
+    <div class="admin-card">
+        <h2>Actividad Reciente</h2>
+        <div class="activity-list" style="max-height: 400px; overflow-y: auto;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTable">
+                    <!-- La tabla se llenará con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Admin styles moved to static/css/admin-dashboard.css -->
+
+<!-- Incluir Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Admin logic moved to static/js/admin-dashboard.js -->
+<!-- Include external admin JS -->
+<script src="{{ url_for('static', filename='js/admin-dashboard.js') }}"></script>
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/pickups.js') }}"></script>
+{% endblock %}
+
+{% endblock %}
